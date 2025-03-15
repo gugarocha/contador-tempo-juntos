@@ -24,6 +24,16 @@ jobs:
     - name: Instalar dependências
       run: flutter pub get
 
+    - name: Criar variaveis de ambiente
+      run: |
+        touch .env
+        echo polaroid_image=${{ secrets.polaroid_image }} >> .env
+        echo best_moments_1=${{ secrets.best_moments_1 }} >> .env
+        echo best_moments_2=${{ secrets.best_moments_2 }} >> .env
+        echo best_moments_3=${{ secrets.best_moments_3 }} >> .env
+        echo firebase_api_key=${{ secrets.firebase_api_key }} >> .env
+        cat .env
+
     - name: Build do Flutter Web
       run: flutter build web --release
 
