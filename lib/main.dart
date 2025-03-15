@@ -11,11 +11,11 @@ import 'src/pages/safe/safe_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Env.instance.load();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await Env.instance.load();
 
   runApp(
     MaterialApp(

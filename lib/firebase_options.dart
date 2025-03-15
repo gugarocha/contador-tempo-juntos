@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
+import 'src/core/env/env.dart';
+
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
@@ -52,8 +54,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDzy32aoqitHwFtvgY4YygdAGV9hUVjIHQ',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: Env.instance.get('firebase_api_key'),
     appId: '1:817915506525:web:5f4a9c327cec07eaaa02b4',
     messagingSenderId: '817915506525',
     projectId: 'gusa-count-time',
