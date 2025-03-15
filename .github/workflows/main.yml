@@ -27,11 +27,11 @@ jobs:
     - name: Criar variaveis de ambiente
       run: |
         touch .env
-        echo polaroid_image=${{ secrets.polaroid_image }} >> .env
-        echo best_moments_1=${{ secrets.best_moments_1 }} >> .env
-        echo best_moments_2=${{ secrets.best_moments_2 }} >> .env
-        echo best_moments_3=${{ secrets.best_moments_3 }} >> .env
-        echo firebase_api_key=${{ secrets.firebase_api_key }} >> .env
+        echo polaroid_image=${{ secrets.POLAROID_IMAGE }} >> .env
+        echo best_moments_1=${{ secrets.BEST_MOMENTS_1 }} >> .env
+        echo best_moments_2=${{ secrets.BEST_MOMENTS_2 }} >> .env
+        echo best_moments_3=${{ secrets.BEST_MOMENTS_3 }} >> .env
+        echo firebase_api_key=${{ secrets.FIREBASE_API_KEY }} >> .env
         cat .env
 
     - name: Build do Flutter Web
