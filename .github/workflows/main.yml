@@ -35,7 +35,7 @@ jobs:
         cat .env
 
     - name: Build do Flutter Web
-      run: flutter build web --release
+      run: flutter build web --release --base-href="/contador-tempo-juntos/"
 
     - name: Publicar no GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
