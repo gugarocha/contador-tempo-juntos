@@ -1,5 +1,4 @@
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/util_functions.dart';
@@ -25,15 +24,10 @@ class _TakeMomentPageState extends State<TakeMomentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Que tal registrar um momento agora?'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => _openCamera(),
-          child: const Text('Registrar momento'),
-        ),
+    return Center(
+      child: ElevatedButton(
+        onPressed: () => _openCamera(),
+        child: const Text('Registrar momento'),
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/ui/extensions/size_extension.dart';
+import '../../core/ui/widgets/polaroid_frame.dart';
 import '../../core/utils/util_functions.dart';
 import '../preview/preview_page.dart';
 
@@ -62,17 +64,26 @@ class _CameraPageState extends State<CameraPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(onPressed: _takePicture),
-      body: FutureBuilder(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return CameraPreview(_cameraController);
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+      body: Center(
+        child: FutureBuilder(
+          future: _initializeControllerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return PolaroidFrame(
+                frameWidth: context.percentWidth(0.90),
+                frameHeight: context.percentHeight(0.85),
+                imageWidth: context.percentWidth(0.80),
+                imageHeight: context.percentHeight(0.72),
+                marginTop: 20,
+                child: CameraPreview(_cameraController),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
       ),
     );
   }

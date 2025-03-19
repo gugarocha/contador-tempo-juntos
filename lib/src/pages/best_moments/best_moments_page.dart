@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/env/env.dart';
 import '../../core/ui/constants.dart';
+import '../../core/ui/extensions/size_extension.dart';
 import '../../core/utils/util_functions.dart';
+import '../camera/camera_page.dart';
 import '../take_moment/take_moment_page.dart';
 
 final imageUrls = [
@@ -26,6 +29,7 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
   late Timer _timer;
   int _currentImageIndex = 0;
   int _imageTimer = 0;
+  bool _prepareToPhoto = false;
 
   void _nextImageTimerCallback(Timer timer) {
     setState(() {
@@ -33,9 +37,17 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
     });
 
     if (_imageTimer % timePerImage == 0) {
-      if (_currentImageIndex == imageUrls.length - 1) {
+      if (_prepareToPhoto) {
         _timer.cancel();
-        UtilFunctions.navigateTo(context, const TakeMomentPage());
+        _loadCameras();
+        return;
+      }
+
+      if (_currentImageIndex == imageUrls.length - 1) {
+        setState(() {
+          _prepareToPhoto = true;
+          _imageTimer = 0;
+        });
         return;
       }
 
@@ -47,24 +59,45 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
   }
 
   void _onLeftTap() {
+    if (_prepareToPhoto) {
+      setState(() {
+        _prepareToPhoto = false;
+        _imageTimer = 0;
+      });
+    }
+
     if (_currentImageIndex > 0) {
       setState(() {
         _currentImageIndex -= 1;
         _imageTimer = 0;
       });
+      return;
     }
   }
 
   void _onRightTap() {
-    if (_currentImageIndex < imageUrls.length - 1) {
-      setState(() {
-        _currentImageIndex += 1;
-        _imageTimer = 0;
-      });
+    if (_prepareToPhoto) {
+      _loadCameras();
       return;
     }
-    UtilFunctions.navigateTo(context, const TakeMomentPage());
+
+    setState(() {
+      if (_currentImageIndex == imageUrls.length - 1) {
+        _prepareToPhoto = true;
+      }
+      _currentImageIndex += 1;
+      _imageTimer = 0;
+    });
   }
+
+  void _loadCameras() async {
+    availableCameras().then(
+      (value) => _navigateToCameraPage(value),
+    );
+  }
+
+  void _navigateToCameraPage(List<CameraDescription> cameras) =>
+      UtilFunctions.navigateTo(context, CameraPage(cameras));
 
   @override
   void initState() {
@@ -83,22 +116,17 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-
     return Scaffold(
       body: Stack(
         children: [
-          FadeInImage.assetNetwork(
-            placeholder: ImagesConstants.loading,
-            image: imageUrls[_currentImageIndex],
-            width: screenWidth,
-            fit: BoxFit.cover,
-          ),
-          // Image.network(
-          //   imageUrls[_currentImageIndex],
-          //   width: screenWidth,
-          //   fit: BoxFit.cover,
-          // ),
+          _prepareToPhoto
+              ? const TakeMomentPage()
+              : FadeInImage.assetNetwork(
+                  placeholder: ImagesConstants.loading,
+                  image: imageUrls[_currentImageIndex],
+                  width: context.screenWidth,
+                  fit: BoxFit.cover,
+                ),
           Row(
             children: [
               Expanded(
@@ -116,18 +144,18 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
           Positioned(
             top: 10,
             child: SizedBox(
-              width: screenWidth,
+              width: context.screenWidth,
               height: 5,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
-                  itemCount: imageUrls.length,
+                  itemCount: imageUrls.length + 1,
                   separatorBuilder: (ctx, i) => const SizedBox(width: 5),
                   itemBuilder: (ctx, i) {
                     final indicatorWidth =
-                        (screenWidth - 10) / imageUrls.length;
+                        (context.screenWidth - 10) / (imageUrls.length + 1);
                     double value;
                     if (_currentImageIndex == i) {
                       value = _imageTimer / timePerImage;

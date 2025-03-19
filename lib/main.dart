@@ -22,10 +22,10 @@ void main() async {
     MaterialApp(
       title: 'Contador de Tempo Juntos',
       debugShowCheckedModeBanner: false,
-      home: const TakeMomentPage(),
+      // home: const TakeMomentPage(),
       // home: const BestMomentsPage(),
       // home: const CountTimePage(),
-      // home: const SafePage(),
+      home: const SafePage(),
       theme: AppTheme.themeData,
     ),
   );
