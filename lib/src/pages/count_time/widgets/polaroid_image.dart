@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/env/env.dart';
 import '../../../core/ui/widgets/polaroid_frame.dart';
-
-final String imageUrl = Env.instance.get('polaroid_image');
+import '../../../services/firebase_service.dart';
 
 class PolaroidImage extends StatefulWidget {
   const PolaroidImage({super.key});
@@ -13,7 +11,17 @@ class PolaroidImage extends StatefulWidget {
 }
 
 class _PolaroidImageState extends State<PolaroidImage> {
+  final _storageService = FirebaseService();
+
+  String? _imageUrl;
   double _opacity = 0.0;
+
+  Future<void> _loadMainImage() async {
+    final url = await _storageService.getImage('main.jpg');
+    setState(() {
+      _imageUrl = url;
+    });
+  }
 
   void _startRevealEffect() {
     Future.delayed(const Duration(milliseconds: 300), () {
@@ -24,26 +32,34 @@ class _PolaroidImageState extends State<PolaroidImage> {
   }
 
   @override
+  void initState() {
+    _loadMainImage();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PolaroidFrame(
-      child: Image.network(
-        imageUrl,
-        width: 240,
-        height: 240,
-        fit: BoxFit.fitWidth,
-        alignment: Alignment.topCenter,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            _startRevealEffect();
-          }
-          return AnimatedOpacity(
-            duration: const Duration(seconds: 6),
-            curve: Curves.linear,
-            opacity: _opacity,
-            child: child,
-          );
-        },
-      ),
+      child: _imageUrl == null
+          ? const SizedBox()
+          : Image.network(
+              _imageUrl!,
+              width: 240,
+              height: 240,
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.topCenter,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  _startRevealEffect();
+                }
+                return AnimatedOpacity(
+                  duration: const Duration(seconds: 6),
+                  curve: Curves.linear,
+                  opacity: _opacity,
+                  child: child,
+                );
+              },
+            ),
     );
   }
 }

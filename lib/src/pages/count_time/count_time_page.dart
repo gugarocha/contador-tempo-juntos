@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/utils/util_functions.dart';
 import '../best_moments/best_moments_page.dart';
 import 'widgets/count_down.dart';
 import 'widgets/polaroid_image.dart';
@@ -47,11 +47,11 @@ class _CountTimePageState extends State<CountTimePage> {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 sliver: SliverToBoxAdapter(
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (ctx) => const BestMomentsPage(),
-                        ),
+                    onPressed: () async {
+                      UtilFunctions.navigateTo(
+                        context,
+                        const BestMomentsPage(),
+                        pushReplacement: false,
                       );
                     },
                     child: const Text(

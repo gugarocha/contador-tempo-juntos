@@ -2,7 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/util_functions.dart';
-import '../best_moments/best_moments_page.dart';
 import '../camera/camera_page.dart';
 
 class TakeMomentPage extends StatefulWidget {
@@ -24,10 +23,21 @@ class _TakeMomentPageState extends State<TakeMomentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () => _openCamera(),
-        child: const Text('Registrar momento'),
+    return const Padding(
+      padding: EdgeInsets.all(15),
+      child: Column(
+        children: [
+          SizedBox(
+             height: 50,
+          ),
+          Text(
+            'Que tal registrar mais\nUM MOMENTO\nagora?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 54,
+            ),
+          ),
+        ],
       ),
     );
   }

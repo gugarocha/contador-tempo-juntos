@@ -3,18 +3,12 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/env/env.dart';
-import '../../core/ui/constants.dart';
 import '../../core/ui/extensions/size_extension.dart';
 import '../../core/utils/util_functions.dart';
+import '../../services/firebase_service.dart';
+import '../../services/image_cache_service.dart';
 import '../camera/camera_page.dart';
 import '../take_moment/take_moment_page.dart';
-
-final imageUrls = [
-  Env.instance.get('best_moments_1'),
-  Env.instance.get('best_moments_2'),
-  Env.instance.get('best_moments_3'),
-];
 
 class BestMomentsPage extends StatefulWidget {
   const BestMomentsPage({super.key});
@@ -26,10 +20,29 @@ class BestMomentsPage extends StatefulWidget {
 class _BestMomentsPageState extends State<BestMomentsPage> {
   static const timePerImage = 5;
 
-  late Timer _timer;
+  final _storageService = FirebaseService();
+  final _imageCacheService = ImageCacheService();
+
+  late Future<List<ImageProvider>> _imagesFuture;
+
+  Timer? _timer;
   int _currentImageIndex = 0;
   int _imageTimer = 0;
+  int _imagesCount = 0;
   bool _prepareToPhoto = false;
+
+  Future<List<ImageProvider>> _loadImages() async {
+    final urls = await _storageService.getImagesUrls('images');
+    final images = _imageCacheService.cacheImages(context, urls);
+    return images;
+  }
+
+  void _startTimer() {
+    _timer ??= Timer.periodic(
+      const Duration(seconds: 1),
+      _nextImageTimerCallback,
+    );
+  }
 
   void _nextImageTimerCallback(Timer timer) {
     setState(() {
@@ -38,22 +51,17 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
 
     if (_imageTimer % timePerImage == 0) {
       if (_prepareToPhoto) {
-        _timer.cancel();
+        _timer?.cancel();
         _loadCameras();
         return;
       }
 
-      if (_currentImageIndex == imageUrls.length - 1) {
-        setState(() {
-          _prepareToPhoto = true;
-          _imageTimer = 0;
-        });
-        return;
-      }
-
       setState(() {
-        _currentImageIndex += 1;
+        if (_currentImageIndex == _imagesCount - 1) {
+          _prepareToPhoto = true;
+        }
         _imageTimer = 0;
+        _currentImageIndex += 1;
       });
     }
   }
@@ -82,7 +90,7 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
     }
 
     setState(() {
-      if (_currentImageIndex == imageUrls.length - 1) {
+      if (_currentImageIndex == _imagesCount - 1) {
         _prepareToPhoto = true;
       }
       _currentImageIndex += 1;
@@ -101,79 +109,99 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
 
   @override
   void initState() {
-    _timer = Timer.periodic(
-      const Duration(seconds: 1),
-      _nextImageTimerCallback,
-    );
+    _imagesFuture = _loadImages();
     super.initState();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          _prepareToPhoto
-              ? const TakeMomentPage()
-              : FadeInImage.assetNetwork(
-                  placeholder: ImagesConstants.loading,
-                  image: imageUrls[_currentImageIndex],
-                  width: context.screenWidth,
-                  fit: BoxFit.cover,
-                ),
-          Row(
+      body: FutureBuilder<List<ImageProvider>>(
+        future: _imagesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Erro ao carregar as imagens'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('Nenhuma imagem encontrada.'));
+          }
+
+          final images = snapshot.data!;
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _startTimer();
+            _imagesCount = images.length;
+          });
+
+          return Stack(
             children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: _onLeftTap,
-                ),
+              _prepareToPhoto
+                  ? const TakeMomentPage()
+                  : Image(
+                      image: images[_currentImageIndex],
+                      width: context.screenWidth,
+                      fit: BoxFit.cover,
+                    ),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: _onLeftTap,
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: _onRightTap,
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: _onRightTap,
+              Positioned(
+                top: 10,
+                child: SizedBox(
+                  width: context.screenWidth,
+                  height: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: images.length + 1,
+                      separatorBuilder: (ctx, i) => const SizedBox(width: 5),
+                      itemBuilder: (ctx, i) {
+                        final indicatorWidth =
+                            (context.screenWidth - 10) / (images.length + 1);
+                        double value;
+                        if (_currentImageIndex == i) {
+                          value = _imageTimer / timePerImage;
+                        } else {
+                          value = i < _currentImageIndex ? 1 : 0;
+                        }
+                        return SizedBox(
+                          width: indicatorWidth,
+                          child: LinearProgressIndicator(
+                            value: value,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
             ],
-          ),
-          Positioned(
-            top: 10,
-            child: SizedBox(
-              width: context.screenWidth,
-              height: 5,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: imageUrls.length + 1,
-                  separatorBuilder: (ctx, i) => const SizedBox(width: 5),
-                  itemBuilder: (ctx, i) {
-                    final indicatorWidth =
-                        (context.screenWidth - 10) / (imageUrls.length + 1);
-                    double value;
-                    if (_currentImageIndex == i) {
-                      value = _imageTimer / timePerImage;
-                    } else {
-                      value = i < _currentImageIndex ? 1 : 0;
-                    }
-                    return SizedBox(
-                      width: indicatorWidth,
-                      child: LinearProgressIndicator(
-                        value: value,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
