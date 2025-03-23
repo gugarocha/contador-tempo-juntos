@@ -8,10 +8,13 @@ class InputPasswordWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 274,
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(color: Colors.grey, width: 0.5),
+      ),
       height: 75,
       padding: const EdgeInsets.symmetric(horizontal: 4),
-      color: Colors.black,
       child: Center(
         child: Row(
           children: [
@@ -40,7 +43,6 @@ class _InputChar extends StatelessWidget {
         child: Text(
           char.isEmpty ? '' : '*',
           style: const TextStyle(
-            // backgroundColor: Colors.amber,
             fontSize: 65,
             color: Colors.white,
           ),

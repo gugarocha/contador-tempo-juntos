@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/ui/constants.dart';
+import '../../core/ui/widgets/heart_widget.dart';
 import '../count_time/count_time_page.dart';
 import 'widgets/indicator_light_widget.dart';
 import 'widgets/input_password_widget.dart';
@@ -84,45 +86,63 @@ class _SafePageState extends State<SafePage> {
 
     return Scaffold(
       body: Center(
-        child: SafeContainer(
-          child: FittedBox(
+        child: FittedBox(
+          child: SafeContainer(
             child: Column(
               children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(224, 170, 255, 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.lock_outline,
+                    size: 45,
+                    color: ColorsConstants.primary,
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Text(
+                  'Nosso Cofre Digital',
+                  style: FontsConstants.titleMedium,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Digite a senha para acessar nossas memórias',
+                  textAlign: TextAlign.center,
+                  style: FontsConstants.bodySmall,
+                ),
+                const HeartWidget(),
                 InputPasswordWidget(inputPassword),
                 const SizedBox(
                   height: 20,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 12,
-                  ),
-                  color: const Color(0xFF212529),
-                  child: Column(
-                    children: [
-                      IndicatorLightWidget(_lightState),
-                      SizedBox(
-                        width: 250,
-                        child: GridView.count(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                          shrinkWrap: true,
-                          children: keyboardChars
-                              .map(
-                                (char) => char.isEmpty
-                                    ? const SizedBox()
-                                    : KeyboardItem(
-                                        char: char,
-                                        onPressed: () =>
-                                            onKeyboardCharPressed(char),
-                                      ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ],
-                  ),
+                IndicatorLightWidget(_lightState),
+                const SizedBox(
+                  height: 20,
+                ),
+                GridView.count(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 15,
+                  childAspectRatio: 3 / 2,
+                  shrinkWrap: true,
+                  children: keyboardChars
+                      .map(
+                        (char) => char.isEmpty
+                            ? const SizedBox()
+                            : KeyboardItem(
+                                char: char,
+                                onPressed: () => onKeyboardCharPressed(char),
+                              ),
+                      )
+                      .toList(),
                 ),
               ],
             ),

@@ -9,10 +9,12 @@ class SafeContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 350,
-      height: 550,
-      padding: const EdgeInsets.symmetric(vertical: 32),
-      decoration: const BoxDecoration(
-        color: Color(0xFF343a40),
+      padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.black26,
+        border: Border.all(color: Colors.grey, width: 0.5),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: child,
     );

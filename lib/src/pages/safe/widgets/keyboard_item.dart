@@ -8,14 +8,25 @@ class KeyboardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Center(
-        child: Text(
-          char,
-          style: const TextStyle(
-            fontSize: 24,
-            color: Colors.white,
+    return Container(
+      width: 80,
+      decoration: BoxDecoration(
+        color: Colors.black26,
+        border: Border.all(
+          color: Colors.grey,
+          width: 0.5,
+        ),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: InkWell(
+        onTap: onPressed,
+        child: Center(
+          child: Text(
+            char,
+            style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

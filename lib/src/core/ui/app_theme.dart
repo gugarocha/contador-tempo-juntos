@@ -8,8 +8,5 @@ sealed class AppTheme {
       seedColor: ColorsConstants.primary,
       surface: ColorsConstants.background,
     ),
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: ColorsConstants.primary),
-    ),
   );
 }

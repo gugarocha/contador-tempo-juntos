@@ -66,21 +66,25 @@ class _IndicatorLightWidgetState extends State<IndicatorLightWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          height: 8,
-          width: 250,
-          margin: const EdgeInsets.symmetric(vertical: 15),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.elliptical(60, 5)),
-            color: _currentColor,
-            boxShadow: [
-              BoxShadow(
-                color: _currentColor.withOpacity(0.6),
-                blurRadius: _currentColor == const Color(0xFFD6EFD8) ? 0 : 8,
-                spreadRadius: _currentColor == const Color(0xFFD6EFD8) ? 0 : 4,
-              ),
-            ],
+        Flexible(
+          fit: FlexFit.loose,
+          child: Container(
+            height: 8,
+            margin: const EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.elliptical(60, 5)),
+              color: _currentColor,
+              boxShadow: [
+                BoxShadow(
+                  color: _currentColor.withValues(alpha: 0.6),
+                  blurRadius: _currentColor == const Color(0xFFD6EFD8) ? 0 : 8,
+                  spreadRadius:
+                      _currentColor == const Color(0xFFD6EFD8) ? 0 : 4,
+                ),
+              ],
+            ),
           ),
         ),
       ],
