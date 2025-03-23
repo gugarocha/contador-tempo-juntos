@@ -8,5 +8,14 @@ sealed class AppTheme {
       seedColor: ColorsConstants.primary,
       surface: ColorsConstants.background,
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: ColorsConstants.primary,
+        backgroundColor: ColorsConstants.secondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      ),
+    ),
   );
 }

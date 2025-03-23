@@ -22,9 +22,6 @@ void main() async {
     MaterialApp(
       title: 'Contador de Tempo Juntos',
       debugShowCheckedModeBanner: false,
-      // home: const Scaffold(
-      //   body: TakeMomentPage(),
-      // ),
       // home: const BestMomentsPage(),
       // home: const CountTimePage(),
       home: const SafePage(),

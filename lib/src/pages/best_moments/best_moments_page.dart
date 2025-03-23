@@ -9,6 +9,7 @@ import '../../services/firebase_service.dart';
 import '../../services/image_cache_service.dart';
 import '../camera/camera_page.dart';
 import '../take_moment/take_moment_page.dart';
+import 'widgets/blurred_background_image.dart';
 
 class BestMomentsPage extends StatefulWidget {
   const BestMomentsPage({super.key});
@@ -148,11 +149,7 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
             children: [
               _prepareToPhoto
                   ? const TakeMomentPage()
-                  : Image(
-                      image: images[_currentImageIndex],
-                      width: context.screenWidth,
-                      fit: BoxFit.cover,
-                    ),
+                  : BlurredBackgroundImage(images[_currentImageIndex]),
               Row(
                 children: [
                   Expanded(

@@ -7,12 +7,9 @@ class HeartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 15),
-      child: Icon(
-        Icons.favorite_outline,
-        color: ColorsConstants.secondary,
-      ),
+    return const Icon(
+      Icons.favorite_outline,
+      color: ColorsConstants.secondary,
     );
   }
 }

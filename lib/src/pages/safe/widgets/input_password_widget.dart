@@ -10,7 +10,7 @@ class InputPasswordWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.black,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey, width: 0.5),
       ),
       height: 75,
