@@ -13,6 +13,12 @@ sealed class ImagesConstants {
 sealed class FontsConstants {
   static const titleFontFamily = 'PlayfairDisplay';
 
+  static const titleLarge = TextStyle(
+    fontFamily: titleFontFamily,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 34,
+  );
   static const titleMedium = TextStyle(
     fontFamily: titleFontFamily,
     color: Colors.white,

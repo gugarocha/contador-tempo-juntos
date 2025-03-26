@@ -10,10 +10,10 @@ sealed class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        foregroundColor: ColorsConstants.primary,
-        backgroundColor: ColorsConstants.secondary,
+        minimumSize: const Size.fromHeight(70),
+        backgroundColor: ColorsConstants.primary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     ),
