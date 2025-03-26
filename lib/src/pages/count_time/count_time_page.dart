@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../core/ui/constants.dart';
+import '../../core/ui/widgets/content_container.dart';
+import '../../core/ui/widgets/heart_widget.dart';
 import '../../core/utils/util_functions.dart';
 import '../best_moments/best_moments_page.dart';
 import 'widgets/count_down.dart';
@@ -28,21 +31,42 @@ class _CountTimePageState extends State<CountTimePage> {
                     children: [
                       PolaroidImage(),
                       SizedBox(
-                        height: 50,
+                        height: 30,
+                      ),
+                      ContentContainer(
+                        child: Column(
+                          children: [
+                            HeartWidget(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              '"Cada segundo ao seu lado é um segundo que me faz mais feliz. Te amo para todo o sempre."',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
                       ),
                       Text(
-                        '🐧 Compartilhando momentos há',
-                        maxLines: 2,
+                        '🐧 Compartilhando\nmomentos há',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 36,
-                        ),
+                        style: FontsConstants.titleLarge,
                       ),
                     ],
                   ),
                 ),
               ),
-              const CountDown(),
+              const SliverPadding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                sliver: CountDown(),
+              ),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 sliver: SliverToBoxAdapter(
@@ -54,8 +78,21 @@ class _CountTimePageState extends State<CountTimePage> {
                         pushReplacement: false,
                       );
                     },
-                    child: const Text(
-                      'Conferir melhores momentos →',
+                    child: const Row(
+                      children: [
+                        Text(
+                          'Conferir melhores momentos',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.arrow_right_alt,
+                          size: 24,
+                        ),
+                      ],
                     ),
                   ),
                 ),

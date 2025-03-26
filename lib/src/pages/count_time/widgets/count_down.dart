@@ -102,22 +102,27 @@ class _TimeAnimatedContainer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: const BoxDecoration(
-        color: ColorsConstants.secondary,
+        color: Colors.black45,
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             time,
             style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
+              color: ColorsConstants.secondary,
             ),
           ),
           Text(
             label,
-            style: const TextStyle(fontSize: 24),
+            style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
