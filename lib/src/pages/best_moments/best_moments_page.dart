@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/ui/extensions/size_extension.dart';
 import '../../core/utils/util_functions.dart';
+import '../../models/image_model.dart';
 import '../../services/firebase_service.dart';
 import '../../services/image_cache_service.dart';
 import '../camera/camera_page.dart';
@@ -25,6 +26,7 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
   final _imageCacheService = ImageCacheService();
 
   late Future<List<ImageProvider>> _imagesFuture;
+  List<ImageModel> _imagesModelList = [];
 
   Timer? _timer;
   int _currentImageIndex = 0;
@@ -32,9 +34,20 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
   int _imagesCount = 0;
   bool _prepareToPhoto = false;
 
-  Future<List<ImageProvider>> _loadImages() async {
-    final urls = await _storageService.getImagesUrls('images');
-    final images = _imageCacheService.cacheImages(context, urls);
+  Future<List<ImageModel>> _loadImages() async {
+    final imagesModelList =
+        await _storageService.getImages('images/best-moments');
+    return imagesModelList;
+  }
+
+  Future<List<ImageProvider>> _cacheImages() async {
+    final imagesModelList = await _loadImages();
+
+    setState(() {
+      _imagesModelList = imagesModelList;
+    });
+
+    final images = _imageCacheService.cacheImages(context, imagesModelList);
     return images;
   }
 
@@ -110,7 +123,7 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
 
   @override
   void initState() {
-    _imagesFuture = _loadImages();
+    _imagesFuture = _cacheImages();
     super.initState();
   }
 
@@ -149,7 +162,11 @@ class _BestMomentsPageState extends State<BestMomentsPage> {
             children: [
               _prepareToPhoto
                   ? const TakeMomentPage()
-                  : BlurredBackgroundImage(images[_currentImageIndex]),
+                  : BlurredBackgroundImage(
+                      image: images[_currentImageIndex],
+                      imageDate: _imagesModelList[_currentImageIndex]
+                          .getImageDateInFull(),
+                    ),
               Row(
                 children: [
                   Expanded(

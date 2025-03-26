@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import '../../../core/ui/widgets/heart_widget.dart';
 
 class BlurredBackgroundImage extends StatelessWidget {
-  const BlurredBackgroundImage(this.image, {super.key});
+  const BlurredBackgroundImage({
+    required this.image,
+    this.imageDate = '',
+    super.key,
+  });
 
   final ImageProvider image;
+  final String imageDate;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +41,13 @@ class BlurredBackgroundImage extends StatelessWidget {
               color: Colors.black38,
               borderRadius: BorderRadius.circular(30),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                HeartWidget(),
-                SizedBox(width: 5),
+                const HeartWidget(),
+                const SizedBox(width: 5),
                 Text(
-                  '26 de Março, 2021',
-                  style: TextStyle(color: Colors.white),
+                  imageDate,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ],
             ),

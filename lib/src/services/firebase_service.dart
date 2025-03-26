@@ -1,5 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../models/image_model.dart';
+
 class FirebaseService {
   static final FirebaseService _instance = FirebaseService._internal();
 
@@ -14,14 +16,21 @@ class FirebaseService {
     return imageUrl;
   }
 
-  Future<List<String>> getImagesUrls(String ref) async {
+  Future<List<ImageModel>> getImages(String ref) async {
+    final List<ImageModel> imagesList = [];
+
     final storageRef = FirebaseStorage.instance.ref(ref);
     final imagesListResult = await storageRef.listAll();
-    
-    final urls = await Future.wait(
-      imagesListResult.items.map((item) => item.getDownloadURL()).toList(),
-    );
 
-    return urls;
+    for (var item in imagesListResult.items) {
+      imagesList.add(
+        ImageModel(
+          url: await item.getDownloadURL(),
+          imageDate: item.name,
+        ),
+      );
+    }
+
+    return imagesList;
   }
 }

@@ -18,4 +18,23 @@ sealed class UtilFunctions {
             ),
           );
   }
+
+  static String getMonthFromNumber(int month) {
+    final months = [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ];
+
+    return months[month - 1];
+  }
 }

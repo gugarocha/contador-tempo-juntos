@@ -22,11 +22,14 @@ class _PreviewPageState extends State<PreviewPage> {
 
   void _uploadImage() {
     try {
-      final storageRef = FirebaseStorage.instance.ref('images');
-      final uploadTask = storageRef.child('moment.jpg').putData(
-            widget.imageBytes,
-            SettableMetadata(contentType: 'image/jpeg'),
-          );
+      final storageRef = FirebaseStorage.instance.ref('images/best-moments');
+
+      final now = DateTime.now();
+      final uploadTask =
+          storageRef.child('${now.year}-${now.month}-${now.day}.jpg').putData(
+                widget.imageBytes,
+                SettableMetadata(contentType: 'image/jpeg'),
+              );
 
       uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
         switch (taskSnapshot.state) {
@@ -42,6 +45,8 @@ class _PreviewPageState extends State<PreviewPage> {
             break;
         }
       });
+
+      Navigator.of(context).pop();
     } on firebase_core.FirebaseException catch (e) {
       log('Error on upload image: ${e.message}');
     }

@@ -8,6 +8,7 @@ class PolaroidFrame extends StatelessWidget {
     this.imageWidth = 240,
     this.imageHeight = 240,
     this.marginTop = 13,
+    this.imageDate,
     super.key,
   });
 
@@ -17,6 +18,7 @@ class PolaroidFrame extends StatelessWidget {
   final double imageWidth;
   final double imageHeight;
   final double marginTop;
+  final String? imageDate;
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +39,13 @@ class PolaroidFrame extends StatelessWidget {
             child: child,
           ),
         ),
-        const Positioned(
-          bottom: 5,
+        Positioned(
+          bottom: 15,
           child: Text(
-            '24/12/2024',
-            style: TextStyle(
+            imageDate ?? '',
+            style: const TextStyle(
               fontFamily: 'Kalam',
-              fontSize: 36,
+              fontSize: 24,
               color: Colors.black,
             ),
           ),

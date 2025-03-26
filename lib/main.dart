@@ -23,8 +23,8 @@ void main() async {
       title: 'Contador de Tempo Juntos',
       debugShowCheckedModeBanner: false,
       // home: const BestMomentsPage(),
-      // home: const CountTimePage(),
-      home: const SafePage(),
+      home: const CountTimePage(),
+      // home: const SafePage(),
       theme: AppTheme.themeData,
     ),
   );

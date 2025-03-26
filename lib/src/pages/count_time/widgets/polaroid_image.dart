@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/ui/widgets/polaroid_frame.dart';
 import '../../../services/firebase_service.dart';
+import '../../../services/image_metadata_service.dart';
 
 class PolaroidImage extends StatefulWidget {
   const PolaroidImage({super.key});
@@ -14,12 +15,16 @@ class _PolaroidImageState extends State<PolaroidImage> {
   final _storageService = FirebaseService();
 
   String? _imageUrl;
+  String? _imageDate;
   double _opacity = 0.0;
 
   Future<void> _loadMainImage() async {
     final url = await _storageService.getImage('main.jpg');
+    final imageDate = await ImageMetadataService().getImageDateInFull(url);
+
     setState(() {
       _imageUrl = url;
+      _imageDate = imageDate;
     });
   }
 
@@ -40,6 +45,7 @@ class _PolaroidImageState extends State<PolaroidImage> {
   @override
   Widget build(BuildContext context) {
     return PolaroidFrame(
+      imageDate: _imageDate,
       child: _imageUrl == null
           ? const SizedBox()
           : Image.network(

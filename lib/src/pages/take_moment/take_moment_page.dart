@@ -16,7 +16,11 @@ class TakeMomentPage extends StatefulWidget {
 
 class _TakeMomentPageState extends State<TakeMomentPage> {
   void _navigateToCameraPage(List<CameraDescription> cameras) =>
-      UtilFunctions.navigateTo(context, CameraPage(cameras));
+      UtilFunctions.navigateTo(
+        context,
+        CameraPage(cameras),
+        pushReplacement: false,
+      );
 
   void _openCamera() async {
     availableCameras().then(
@@ -39,7 +43,7 @@ class _TakeMomentPageState extends State<TakeMomentPage> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: _openCamera,
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               child: Row(
